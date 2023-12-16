@@ -32,3 +32,18 @@
     padding: 6px 12px;
     border-radius: 20px;
 }
+
+.lowScore {
+    background-color: #8f8f8f;
+    color: white;
+}
+
+.middleScore {
+    background-color: #ffd6a1;
+    color: #ff8d00;
+}
+
+.highScore {
+    background-color: #e7acff;
+    color: #c02cff;
+}
