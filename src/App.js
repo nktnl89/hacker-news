@@ -1,65 +1,31 @@
 import { NewsItem } from "./NewsItem/NewsItem";
 import { useEffect, useState } from "react";
-
-const initNews = [
-  {
-    title: 'Первая новость',
-    url: 'www.example.com',
-    username: 'Пользователь1',
-    date: '10.10.10',
-    score: 10,
-    id: '1'
-  },
-  {
-    title: 'Вторая новость',
-    url: 'www.example.com',
-    username: 'Пользователь2',
-    date: '10.10.10',
-    score: 100,
-    id: '2'
-  },
-  {
-    title: 'Третяя новость',
-    url: 'www.example.com',
-    username: 'Пользователь3',
-    date: '10.10.23',
-    score: 1,
-    id: '3'
-  }
-]
-
-const newNews = {
-  title: 'Четвертая новость',
-  url: 'www.example.com',
-  username: 'Пользователь3',
-  date: '10.10.23',
-  score: 1,
-  id: '4'
-}
+import { get } from "./api/api";
 
 function App() {
-  const checkStorage = () => JSON.parse(window.localStorage.getItem('newsKey')) || initNews
-  const [news, setNews] = useState(checkStorage)
+  const [news, setNews] = useState([])
 
   useEffect(() => {
-    window.localStorage.setItem('newsKey', JSON.stringify(news))
-  }, [news])
+    getNewsList()
+  }, [])
 
-  const newsCountHandler = () => {
-    setNews((prevState) => [...prevState, newNews]);
+  async function getNewsList() {
+    const newsIds = await get('https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty&orderBy="$priority"&limitToFirst=10')
+    const newsList = await Promise
+      .all(newsIds.map((id) => get(`https://hacker-news.firebaseio.com/v0/item/${id}.json?print=pretty`)))
+    setNews(newsList)
   }
 
   return (
     <>
       <div>Количество новостей: {news.length}</div>
-      <button onClick={newsCountHandler}>Добавить новость</button>
       {
         news.map(item => {
           return <NewsItem key={item.id}
             title={item.title}
             url={item.url}
-            username={item.username}
-            date={item.date}
+            username={item.by}
+            date={item.time}
             score={item.score}
           />
         })
