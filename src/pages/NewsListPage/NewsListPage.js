@@ -1,7 +1,7 @@
 import { NewsItem } from "../../components/NewsItem/NewsItem";
 import { useEffect, useState } from "react";
 import { get } from "../../api/api";
-import styles from "./NewsList.module.css"
+import styles from "./NewsListPage.module.css"
 
 export function NewsList() {
     const [news, setNews] = useState([])
